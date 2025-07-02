@@ -3,296 +3,202 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🐍Snake Game</title>
+  <title>🔐 Password Generator</title>
   <style>
-    :root {
-      --light-bg: #eef;
-      --light-text: #000;
-      --dark-bg: #1e1e1e;
-      --dark-text: #f0f0f0;
-      --primary: #28a745;
-      --secondary: #444;
-    }
-
-    body, html {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--light-bg);
-      color: var(--light-text);
+      font-family: "Segoe UI", sans-serif;
       transition: background 0.3s, color 0.3s;
     }
 
-    body.dark-mode {
-      background-color: var(--dark-bg);
-      color: var(--dark-text);
-    }
-
-    #welcome-screen {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: url(WhatsApp\ Image\ 2025-07-01\ at\ 17.28.23_6872db98.jpg) no-repeat center center;
-      background-size: cover;
+    /* Welcome Section */
+    #welcome {
+      height: 100vh;
+      background: url(images.jpeg) center/cover no-repeat;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      z-index: 2;
-    }
-
-    #welcome-screen h1 {
-      font-size: 3rem;
+      align-items: center;
       color: white;
-      text-shadow: 2px 2px 5px #000;
-      margin-bottom: 20px;
-    }
-
-    #start-btn {
-      padding: 12px 25px;
-      font-size: 1.2rem;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    #start-btn:hover {
-      background-color: #218838;
-    }
-
-    canvas {
-      display: block;
-      margin: auto;
-      background-color: #eef;
-    }
-
-    #score-board {
       text-align: center;
-      font-size: 20px;
-      margin-top: 10px;
-      display: none;
     }
 
-    .toggle-container {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 5;
+    #welcome h1 {
+      font-size: 2.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      border-radius: 10px;
     }
 
-    .toggle-container button {
-      padding: 6px 12px;
+    #startBtn {
+      margin-top: 20px;
+      padding: 10px 25px;
+      font-size: 1.2rem;
       border: none;
       border-radius: 5px;
-      background-color: var(--secondary);
-      color: white;
       cursor: pointer;
-    }
-
-    .score-values span {
-      margin: 0 10px;
-      font-weight: bold;
-    }
-
-    /* Game Over Modal */
-    #game-over-modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .game-over-box {
-      background: white;
-      padding: 30px 40px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    body.dark-mode .game-over-box {
-      background: #333;
+      background: #00c853;
       color: white;
     }
 
-    .game-over-box h2 {
-      font-size: 2rem;
-      margin-bottom: 10px;
+    /* Generator Section */
+    #generator {
+      display: none;
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
     }
 
-    .game-over-box p {
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    label, p {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input[type=checkbox] {
+      margin-right: 10px;
+    }
+
+    .password-box {
+      background: #f1f1f1;
+      padding: 10px;
       font-size: 1.2rem;
-      margin-bottom: 20px;
+      word-break: break-all;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
 
-    .game-over-box button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      background-color: var(--primary);
+    #copyBtn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #2196f3;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 5px;
       cursor: pointer;
     }
 
-    .game-over-box button:hover {
-      background-color: #218838;
+    #themeToggle {
+      float: right;
+      margin-top: -10px;
+    }
+
+    .dark {
+      --card-bg: #1c1c1c;
+      background: #121212;
+      color: white;
+    }
+
+    .light {
+      --card-bg: #ffffff;
+      background: #f5f5f5;
+      color: #000;
+    }
+
+    .switch {
+      margin-bottom: 1rem;
+    }
+
+    @media screen and (max-width: 600px) {
+      #welcome h1 {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
-<body>
+<body class="light">
+  <!-- Welcome Page -->
+  <section id="welcome">
+    <h1>🔒 Welcome to <br><b>Password Generator</b></h1>
+    <button id="startBtn">Start 🔑</button>
+  </section>
 
-  <!-- Dark Mode Toggle -->
-  <div class="toggle-container">
-    <button id="theme-toggle">🌙 Dark Mode</button>
-  </div>
+  <!-- Generator Page -->
+  <section id="generator">
+    <div class="card">
+      <h2>🔑 Generate a Secure Password</h2>
+      <div class="switch">
+        <label>
+          <input type="checkbox" id="themeToggle"> Dark Mode
+        </label>
+      </div>
 
-  <!-- Welcome Screen -->
-  <div id="welcome-screen">
-    <h1>🐍 Snake Game</h1>
-    <button id="start-btn">Start Game</button>
-  </div>
+      <label>Password Length: <span id="lengthValue">12</span></label>
+      <input type="range" id="length" min="4" max="32" value="12" />
 
-  <!-- Scoreboard -->
-  <div id="score-board">
-    <div class="score-values">
-      <span>Score: <span id="score">0</span></span>
-      <span>High Score: <span id="high-score">0</span></span>
+      <label><input type="checkbox" id="uppercase" checked> Include Uppercase</label>
+      <label><input type="checkbox" id="lowercase" checked> Include Lowercase</label>
+      <label><input type="checkbox" id="numbers" checked> Include Numbers</label>
+      <label><input type="checkbox" id="symbols"> Include Symbols</label>
+
+      <p>Generated Password:</p>
+      <div class="password-box" id="password">🔐 Click Generate</div>
+      <button onclick="copyPassword()" id="copyBtn">📋 Copy</button>
+      <button onclick="generatePassword()" style="margin-top:10px">🔄 Generate</button>
     </div>
-  </div>
-
-  <!-- Game Over Modal -->
-  <div id="game-over-modal">
-    <div class="game-over-box">
-      <h2>Game Over</h2>
-      <p>Your score: <span id="final-score">0</span></p>
-      <button onclick="resetGame()">Play Again</button>
-    </div>
-  </div>
-
-  <!-- Canvas -->
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  </section>
 
   <script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-    const scoreDisplay = document.getElementById("score");
-    const highScoreDisplay = document.getElementById("high-score");
-    const scoreBoard = document.getElementById("score-board");
-    const welcomeScreen = document.getElementById("welcome-screen");
-    const startBtn = document.getElementById("start-btn");
-    const themeToggle = document.getElementById("theme-toggle");
-    const gameOverModal = document.getElementById("game-over-modal");
-    const finalScoreDisplay = document.getElementById("final-score");
+    const startBtn = document.getElementById("startBtn");
+    const welcome = document.getElementById("welcome");
+    const generator = document.getElementById("generator");
+    const lengthSlider = document.getElementById("length");
+    const lengthValue = document.getElementById("lengthValue");
+    const passwordBox = document.getElementById("password");
 
-    let box = 20;
-    let snake = [];
-    let direction = "RIGHT";
-    let score = 0;
-    let highScore = localStorage.getItem("snakeHighScore") || 0;
-    let gameInterval;
-    let food;
+    startBtn.onclick = () => {
+      welcome.style.display = "none";
+      generator.style.display = "block";
+    };
 
-    highScoreDisplay.textContent = highScore;
+    lengthSlider.oninput = () => {
+      lengthValue.textContent = lengthSlider.value;
+    };
 
-    function resetGame() {
-      snake = [{ x: 9 * box, y: 10 * box }];
-      direction = "RIGHT";
-      score = 0;
-      scoreDisplay.textContent = score;
-      finalScoreDisplay.textContent = 0;
-      generateFood();
-      gameOverModal.style.display = "none";
-      clearInterval(gameInterval);
-      gameInterval = setInterval(draw, 100);
-    }
+    document.getElementById("themeToggle").addEventListener("change", function () {
+      document.body.className = this.checked ? "dark" : "light";
+    });
 
-    function generateFood() {
-      food = {
-        x: Math.floor(Math.random() * (canvas.width / box)) * box,
-        y: Math.floor(Math.random() * (canvas.height / box)) * box
-      };
-    }
+    function generatePassword() {
+      const length = +lengthSlider.value;
+      const hasUpper = document.getElementById("uppercase").checked;
+      const hasLower = document.getElementById("lowercase").checked;
+      const hasNumber = document.getElementById("numbers").checked;
+      const hasSymbol = document.getElementById("symbols").checked;
 
-    function draw() {
-      ctx.fillStyle = document.body.classList.contains("dark-mode") ? "#2b2b2b" : "#eef";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const lower = "abcdefghijklmnopqrstuvwxyz";
+      const number = "0123456789";
+      const symbol = "!@#$%^&*(){}[]=<>/,.";
+      let all = "";
 
-      for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i == 0 ? "black" : "green";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-      }
+      if (hasUpper) all += upper;
+      if (hasLower) all += lower;
+      if (hasNumber) all += number;
+      if (hasSymbol) all += symbol;
 
-      ctx.fillStyle = "red";
-      ctx.fillRect(food.x, food.y, box, box);
-
-      let headX = snake[0].x;
-      let headY = snake[0].y;
-
-      if (direction == "LEFT") headX -= box;
-      if (direction == "RIGHT") headX += box;
-      if (direction == "UP") headY -= box;
-      if (direction == "DOWN") headY += box;
-
-      if (
-        headX < 0 ||
-        headY < 0 ||
-        headX >= canvas.width ||
-        headY >= canvas.height ||
-        collision(headX, headY, snake)
-      ) {
-        clearInterval(gameInterval);
-        if (score > highScore) {
-          highScore = score;
-          localStorage.setItem("snakeHighScore", highScore);
-          highScoreDisplay.textContent = highScore;
-        }
-        finalScoreDisplay.textContent = score;
-        gameOverModal.style.display = "flex";
+      let password = "";
+      if (all.length === 0) {
+        passwordBox.textContent = "Please select at least one option.";
         return;
       }
 
-      if (headX === food.x && headY === food.y) {
-        score++;
-        scoreDisplay.textContent = score;
-        generateFood();
-      } else {
-        snake.pop();
+      for (let i = 0; i < length; i++) {
+        password += all[Math.floor(Math.random() * all.length)];
       }
-
-      const newHead = { x: headX, y: headY };
-      snake.unshift(newHead);
+      passwordBox.textContent = password;
     }
 
-    function collision(x, y, array) {
-      return array.some(segment => segment.x === x && segment.y === y);
+    function copyPassword() {
+      navigator.clipboard.writeText(passwordBox.textContent);
+      alert("🔐 Password Copied to Clipboard!");
     }
-
-    document.addEventListener("keydown", e => {
-      if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-      else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-      else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-      else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
-    });
-
-    startBtn.addEventListener("click", () => {
-      welcomeScreen.style.display = "none";
-      scoreBoard.style.display = "block";
-      resetGame();
-    });
-
-    themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark-mode");
-      themeToggle.textContent = document.body.classList.contains("dark-mode") ? "☀ Light Mode" : "🌙 Dark Mode";
-    });
   </script>
 </body>
 </html>
